@@ -1,0 +1,36 @@
+const gen = function* () {
+  console.log(1)
+  yield
+  console.log(2)
+  yield
+  console.log(3)
+  yield 4;
+}
+
+const generator = gen()
+generator.next()
+generator.next()
+generator.next()
+
+value와 done을 가진 객체를 리턴
+
+
+yield 수행을 멈추면 value를 산출
+중단점이 있는 함수
+
+
+const gen = function*() {
+  while(true) {
+    yield "무한";
+  }
+}
+// yield의 중단에 의해 무한 루프 x
+// 무한을 표현 가능
+
+
+이벤트 리스너와 유사하다.
+next가 호출되면 함수가 호출됨 !!
+이 성질이 saga에 활용된 것
+
+action이 dispatch되면
+제네레이터가 호출!!

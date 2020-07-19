@@ -1,11 +1,11 @@
-import React, { useState, useCallback } from "react";
-import PropTypes from "prop-types";
-import styled from "styled-components";
-import { Form, Input, Button } from "antd";
-import Link from "next/link";
-import useInput from "../hooks/useInput";
-import { useDispatch } from "react-redux";
-import { login } from "../reducers/user";
+import React, { useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import styled from 'styled-components';
+import { Form, Input, Button } from 'antd';
+import Link from 'next/link';
+import useInput from '../hooks/useInput';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginRequestAction } from '../reducers/user';
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
@@ -16,16 +16,17 @@ const StyledForm = styled(Form)`
 `;
 
 const LoginForm = () => {
-  const [id, onChangeId] = useInput("");
-  const [password, onChangePassword] = useInput("");
+  const [id, onChangeId] = useInput('');
+  const [password, onChangePassword] = useInput('');
   const dispatch = useDispatch();
+  const { isLoggingIn } = useSelector((state) => state.user);
 
   const onSubmitForm = useCallback(() => {
     // console.log(id, password);
     dispatch(
-      login({
-        name: "zerocho",
-        nickanme: "um",
+      loginRequestAction({
+        id,
+        password,
       })
     );
   }, [id, password]);
@@ -49,7 +50,7 @@ const LoginForm = () => {
         />
       </div>
       <ButtonWrapper>
-        <Button type="primary" htmlType="submit" loading={false}>
+        <Button type="primary" htmlType="submit" loading={isLoggingIn}>
           로그인
         </Button>
         <Link href="/signup">
