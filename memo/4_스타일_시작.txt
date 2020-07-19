@@ -1,0 +1,87 @@
+styled-components 좋긴한데
+emotion이 뜨고 있대
+
+npm trends에서 비슷한 라이브러리 트렌드 확인 가능
+
+npm install @ant-design/icons
+
+next는 기본적으로 webpack이 내장
+
+loader로 import를 보고 파일을 변환
+
+css => <style></style>
+
+_app.js
+  페이지들의 공통되는 부분을 구현 가능
+  Component로 페이지 컴포넌트를 props로 받음
+  
+Head 컴포넌트로 <head></head>를 다룰 수 있다.
+
+
+그리드 시스템
+
+반응형 vs 적응형
+  적응형 => 모바일, 태블릿, 피씨 html을 따로 개발
+
+  반응형 => 하나의 페이지가 화면 크기에 반응
+           모바일 부터 하고 pc를 하자
+
+화면의 너비를 24로 쪼갰다고 보면 됨
+  xs
+  sm
+  md
+
+target=_blank 일때 보안을 위해 아래를 추가!
+  rel="noreferrer noopener"
+
+
+container가 데이터 다루는 컴포넌트
+component는 표현형 컴포넌트들
+hooks가 추가되면서 구분하는게 덜 추천됨
+폴더로 컴포넌트들을 잘 분류하자
+
+
+style 객체로 스타일링하면 렌더링마다..
+객체가 새로 생긴다.
+불변성이 다르니까 리렌더링 시켜버림
+
+
+useMemo와 useCallback
+  값을 캐싱할까? 함수를 캐싱할까? 
+
+
+리렌더링
+  함수 내부는 재실행
+  가상돔에는 어쨋든 그림
+  실제 dom 반영은 달라진 부분만
+  불변성에 의해 검사해서 리렌더링
+
+
+  리렌더링 자체가 성능이 문제는 아님
+  render가 실행된것만을 의미하는 것
+  가상돔 상 바뀐거 없으면 실제 dom 반영은
+  없다 하지만 함수 실행이 많으니까
+  적은게 좋긴하다.
+
+리액트와 vue가 알아서
+view를 리렌더링 하는데
+jQuery는 일일히 다시 그려야 함
+
+어쩔 수 없이 써야한다면
+서로 뷰의 영역을 침범하지 않게하자.
+
+
+react-devtools
+redux-devtools
+
+
+echarts
+
+
+
+styled-components  
+ssr 설정이 필요하다.
+
+
+프론트엔드 html, 데이터랑 합쳐서 초기페이지를 내려주는데
+styled-components 적용이 안된채로 내려와서 문제가 발생

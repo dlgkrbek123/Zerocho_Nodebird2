@@ -1,0 +1,98 @@
+리덕스 좋긴한데 생산성이 조금 딸림 
+MOBX 추천
+
+
+npm install next-redux-wrapper redux react-redux
+
+원래는 Provider를 썼다.
+next-redux-wrapper를 쓰자.
+
+
+redux 이런거 context api로 대체가능함?
+작은 규모의 앱이라면 가능
+
+
+로그인 유저 정보
+로그인 여부
+등등은 여러 컴포넌트들에 의해 공유되는 데이터
+
+
+중앙 데이터 저장소
+context api도 비슷한 역할을 할 수 있긴 함
+
+
+비동기는 실패에 대비해야 함
+이걸 context api에 구현하긴 좀 어렵다.
+
+
+요청 - 성공 - 실패
+
+
+------------------------------------
+
+리덕스는 reduce가 어원이다.
+데이터를 수정하려면 action이라는 객체를 
+store에 dispatch한다.
+
+action은 type과 payload를 가진 객체
+
+reducer는 dispatch된 action을 인자로 받아
+변이된 state를 return하는 함수
+
+
+데이터 바꿀떄마다 action을 추가하고
+이를 처리하는 리듀서를 구현해야함
+
+
+코드량이 증가
+절차가 복잡하지만 트래킹 매우 쉬움
+
+
+리턴을 spread로 하는 이유는
+immutability 때문이다.
+state의 변화 비교를 하기 위해서
+
+
+객체는 레퍼런스로 비교된다.
+변이됨을 명확히 하려면 
+새 객체를 만들어야 한다.
+이를 통해 객체의 변이를 추적 용이
+
+
+동적인 action을 만들어주는 
+action creator 함수를 활용한다.
+
+
+action이 dispatch되면 리렌더링
+
+
+
+action
+
+
+
+
+
+
+getInitialProps 가 거의 안쓰임
+
+getStaticprops
+getServerProps
+가 득세하면서 ssr이 조금 변함
+
+
+jump로 이동이 가능하다.
+리듀서 단일이면 파일 감당안된다.
+쪼개야 한다.
+
+------------------------
+
+컴포넌트를 폴더로 구성해서
+index.js로 export할
+핵심 컴포넌트를 설정하고
+나머지 파일들로 index.js
+를 구성하는 부품을 만듦!!
+
+
+파일을 쪼개서 가독성
+유지보수 향상

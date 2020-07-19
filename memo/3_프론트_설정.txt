@@ -1,0 +1,19 @@
+npm init
+npm install next react react-dom antd styled-components prop-types
+
+pages의 컴포넌트가 파일 시스템에 매칭됨
+라우트 - 컴포넌트 1대1 매칭
+
+[??].js => 다이나믹 라우트
+
+페이지는 아닌데 재사용되는 컴포넌트들 => components 디렉토리
+
+next는 자체 라우터가 있다.
+빌드 후 해당 페이지 처음 접근 시 느리다.
+
+.eslintrc 같이 .이 붙으면 숨김, 시스템 파일 취급
+
+프론트, 백엔드의 도메인이 달라서
+  with credentials
+  cors
+설정 필요
