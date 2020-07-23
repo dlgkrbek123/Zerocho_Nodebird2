@@ -1,32 +1,37 @@
-import React, { useCallback, useRef } from "react";
-import { Form, Input, Button } from "antd";
-import { useSelector, useDispatch } from "react-redux";
-import useInput from "../hooks/useInput";
-import { addPost } from "../reducers/post";
+import React, { useCallback, useRef, useEffect } from 'react';
+import { Form, Input, Button } from 'antd';
+import { useSelector, useDispatch } from 'react-redux';
+import useInput from '../hooks/useInput';
+import { addPost } from '../reducers/post';
 
 const PostForm = () => {
-  const { imagePaths } = useSelector((state) => state.post);
-  const [text, onChangeText] = useInput("");
+  const { imagePaths, addPostDone } = useSelector((state) => state.post);
+  const [text, onChangeText] = useInput('');
   const imageRef = useRef(null);
   const dispatch = useDispatch();
 
   const onSubmit = useCallback(() => {
-    dispatch(addPost);
-    onChangeText({
-      target: {
-        value: "",
-      },
-    });
-  }, []);
+    dispatch(addPost(text));
+  }, [text]);
 
   const onClickImageUpload = useCallback(() => {
     imageRef.current.click();
   }, []);
 
+  useEffect(() => {
+    if (addPostDone) {
+      onChangeText({
+        target: {
+          value: '',
+        },
+      });
+    }
+  }, [addPostDone]);
+
   return (
     <Form
       style={{
-        marginTop: "10px 0px 20px",
+        marginTop: '10px 0px 20px',
       }}
       encType="multipart/form-data"
       onFinish={onSubmit}
@@ -44,7 +49,7 @@ const PostForm = () => {
           type="primary"
           htmlType="submit"
           style={{
-            float: "right",
+            float: 'right',
           }}
         >
           짹짹
@@ -55,10 +60,10 @@ const PostForm = () => {
           <div
             key={v}
             style={{
-              display: "inline-block",
+              display: 'inline-block',
             }}
           >
-            <img src={v} style={{ width: "200px" }} alt={v} />
+            <img src={v} style={{ width: '200px' }} alt={v} />
             <div>
               <Button>제거</Button>
             </div>
