@@ -9,12 +9,16 @@ import {
   MessageOutlined,
   EllipsisOutlined,
 } from "@ant-design/icons";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import PostImages from "./PostImages";
 import PostCardContent from "./PostCardContent";
+import { REMOVE_POST_REQUEST } from "../reducers/post";
 
 const PostCard = ({ post }) => {
   const id = useSelector((state) => state.user.me?.id);
+  const dispatch = useDispatch();
+  const { removePostLoading } = useSelector((state) => state.post);
+
   // 보호 연산을 줄여준다 없으면 undefined가 리턴
 
   const [liked, setLiked] = useState(false);
@@ -26,6 +30,12 @@ const PostCard = ({ post }) => {
   const onToggleComment = useCallback(() => {
     setCommentFormOpend(!commentFormOpend);
   }, [commentFormOpend]);
+  const onRemovePost = useCallback(() => {
+    dispatch({
+      type: REMOVE_POST_REQUEST,
+      data: post.id,
+    });
+  }, []);
 
   return (
     <div
@@ -54,7 +64,13 @@ const PostCard = ({ post }) => {
                 {id && post.User.id === id ? (
                   <>
                     <Button>수정</Button>
-                    <Button type="danger">삭제</Button>
+                    <Button
+                      type="danger"
+                      loading={removePostLoading}
+                      onClick={onRemovePost}
+                    >
+                      삭제
+                    </Button>
                   </>
                 ) : (
                   <Button>신고</Button>
