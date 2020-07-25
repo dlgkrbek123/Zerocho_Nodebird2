@@ -1,42 +1,10 @@
 import shortId from "shortid";
 import produce from "immer";
+import shortid from "shortid";
+import faker from "faker";
 
 const initialState = {
-  mainPosts: [
-    {
-      id: 1,
-      User: {
-        id: 1,
-        nickname: "제로초",
-      },
-      content: "첫 번째 게시글 #해시태그 #익스프레스",
-      Images: [
-        {
-          src: "https://picsum.photos/200",
-        },
-        {
-          src: "https://picsum.photos/200",
-        },
-        {
-          src: "https://picsum.photos/200",
-        },
-      ],
-      Comments: [
-        {
-          User: {
-            nickname: "nero",
-          },
-          content: "우와 개정판이 나왔군요",
-        },
-        {
-          User: {
-            nickname: "hero",
-          },
-          content: "사고 싶네요",
-        },
-      ],
-    },
-  ],
+  mainPosts: [],
   imagePaths: [],
   addPostLoading: false,
   addPostDone: false,
@@ -48,6 +16,38 @@ const initialState = {
   addCommentDone: false,
   addCommentError: null,
 };
+
+// faker
+// placeholder.com도 좋다.
+
+// redux-toolkit
+
+initialState.mainPosts = initialState.mainPosts.concat(
+  Array(20)
+    .fill()
+    .map(() => ({
+      id: shortid.generate(),
+      User: {
+        id: shortid.generate(),
+        nickname: faker.name.findName(),
+      },
+      content: faker.lorem.paragraph(),
+      Images: [
+        {
+          src: faker.image.image(),
+        },
+      ],
+      Comments: [
+        {
+          User: {
+            id: shortid.generate(),
+            nickname: faker.name.findName(),
+          },
+          content: faker.lorem.sentence(),
+        },
+      ],
+    }))
+);
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
