@@ -3,9 +3,16 @@ import produce from "immer";
 import shortid from "shortid";
 import faker from "faker";
 
+// faker
+// placeholder.com도 좋다.
+
 const initialState = {
   mainPosts: [],
   imagePaths: [],
+  hasMorePost: true,
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -17,13 +24,8 @@ const initialState = {
   addCommentError: null,
 };
 
-// faker
-// placeholder.com도 좋다.
-
-// redux-toolkit
-
-initialState.mainPosts = initialState.mainPosts.concat(
-  Array(20)
+export const generateDummyPost = (number) => {
+  return Array(number)
     .fill()
     .map(() => ({
       id: shortid.generate(),
@@ -46,8 +48,12 @@ initialState.mainPosts = initialState.mainPosts.concat(
           content: faker.lorem.sentence(),
         },
       ],
-    }))
-);
+    }));
+};
+
+export const LOAD_POSTS_REQUEST = "LOAD_POSTS_REQUEST";
+export const LOAD_POSTS_SUCCESS = "LOAD_POSTS_SUCCESS";
+export const LOAD_POSTS_FAILURE = "LOAD_POSTS_FAILURE";
 
 export const ADD_POST_REQUEST = "ADD_POST_REQUEST";
 export const ADD_POST_SUCCESS = "ADD_POST_SUCCESS";
@@ -94,8 +100,23 @@ const dummyComment = (data) => ({
 const post = (state = initialState, action) => {
   return produce(state, (draft) => {
     switch (action.type) {
+      case LOAD_POSTS_REQUEST:
+        draft.loadPostsLoading = true;
+        draft.loadPostsDone = false;
+        draft.loadPostsError = null;
+        break;
+      case LOAD_POSTS_SUCCESS:
+        draft.loadPostsLoading = false;
+        draft.loadPostsDone = true;
+        draft.mainPosts = action.data.concat(draft.mainPosts);
+        draft.hasMorePost = draft.mainPosts.length < 50;
+        break;
+      case LOAD_POSTS_FAILURE:
+        draft.loadPostsLoading = false;
+        draft.loadPostsError = action.error;
+        break;
       case ADD_POST_REQUEST:
-        draft.addPostLoading = true;
+        draft.addPostLoading = false;
         draft.addPostDone = false;
         draft.addPostError = null;
         break;
@@ -109,7 +130,7 @@ const post = (state = initialState, action) => {
         draft.addPostError = action.error;
         break;
       case REMOVE_POST_REQUEST:
-        draft.removePostLoading = true;
+        draft.removePostLoading = false;
         draft.removePostDone = false;
         draft.removePostError = null;
         break;

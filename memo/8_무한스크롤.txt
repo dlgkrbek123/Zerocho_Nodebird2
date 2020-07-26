@@ -1,0 +1,6 @@
+throttle, takeLatest는 인자로 받은 함수의 호출
+횟수를 제한하지 액션 그자체의 dispatch는 안막음
+
+따라서 호출부분에서 로딩시에는 action을 dispatch 못하게 제한
+
+react-virtualized를 사용해서 가상화를 사용

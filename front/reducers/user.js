@@ -10,6 +10,12 @@ const initialState = {
   signUpLoading: false,
   signUpDone: false,
   signUpError: null,
+  followLoading: false,
+  followDone: false,
+  followError: null,
+  unfollowLoading: false,
+  unfollowDone: false,
+  unfollowError: null,
   changeNicknameLoading: false,
   changeNicknameDone: false,
   changeNicknameError: null,
@@ -34,7 +40,7 @@ export const CHANGE_NICKNAME_REQUEST = "CHANGE_NICKNAME_REQUEST";
 export const CHANGE_NICKNAME_SUCCESS = "CHANGE_NICKNAME_SUCCESS";
 export const CHANGE_NICKNAME_FAILURE = "CHANGE_NICKNAME_FAILURE";
 
-export const FOLLOW_REQUEST = "FOLLOW_RE QUEST";
+export const FOLLOW_REQUEST = "FOLLOW_REQUEST";
 export const FOLLOW_SUCCESS = "FOLLOW_SUCCESS";
 export const FOLLOW_FAILURE = "FOLLOW_FAILURE";
 
@@ -138,6 +144,37 @@ const user = (state = initialState, action) => {
       case CHANGE_NICKNAME_FAILURE:
         draft.changeNicknameLoading = false;
         draft.changeNicknameError = action.error;
+        break;
+      case FOLLOW_REQUEST:
+        draft.followLoading = true;
+        draft.followDone = false;
+        draft.followError = null;
+        break;
+      case FOLLOW_SUCCESS:
+        draft.followLoading = false;
+        draft.followDone = true;
+        draft.me.Followings.push({ id: action.data });
+        break;
+      case FOLLOW_FAILURE:
+        draft.followLoading = false;
+        draft.followError = action.error;
+        break;
+      case UNFOLLOW_REQUEST:
+        draft.unfollowLoading = true;
+        draft.unfollowDone = false;
+        draft.unfollowError = null;
+
+        break;
+      case UNFOLLOW_SUCCESS:
+        draft.unfollowLoading = false;
+        draft.unfollowDone = true;
+        draft.me.Followings = draft.me.Followings.filter(
+          ({ id }) => id !== action.data
+        );
+        break;
+      case UNFOLLOW_FAILURE:
+        draft.unfollowLoading = false;
+        draft.unfollowError = action.error;
         break;
       case ADD_POST_TO_ME:
         draft.me.Posts.unshift({ id: action.data });
