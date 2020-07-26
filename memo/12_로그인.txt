@@ -29,3 +29,17 @@ npm install dotenv
 
 req.login
   패스포트 로그인, serializeUser가 실행된다.
+
+
+
+--------------------------------------
+
+프론트와 백의 도메인이 다르다.
+cors는 서버측 설정으로 해결
+
+도메인이 달라서 쿠키가 전달이 안된다.
+백엔드는 누가 보냈는지 모름
+cors가 access-control-allow-origin 해결해준 것처럼
+
+백엔드는 credentails : true
+프론트에서는 ajax요청시 withCredentials

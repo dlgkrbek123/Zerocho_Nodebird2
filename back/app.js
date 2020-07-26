@@ -25,8 +25,9 @@ passportConfig();
 
 app.use(
   cors({
-    origin: "*",
-    credentials: false,
+    origin: "http://127.0.0.1:3060",
+    credentials: true, // true로 해야 쿠키도 전달이된다.
+    // true로 하면 origin을 정확히 입력해야한다.
   })
 );
 app.use(express.json()); // json
