@@ -1,7 +1,56 @@
 const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
-const { User } = require("../models");
+const passport = require("passport");
+const { User, Post } = require("../models");
+
+router.post("/login", (req, res, next) => {
+  // 미들웨어 확장
+  passport.authenticate("local", (err, user, info) => {
+    if (err) {
+      console.error(err);
+      return next(err);
+    }
+    if (info) {
+      return res.status(401).send(info.reason);
+    }
+
+    // 서비스 로그인, passport 로그인 두 번한다.
+
+    return req.login(user, async (loginErr) => {
+      if (loginErr) {
+        return next(loginErr);
+      }
+
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: user.id },
+        attributes: ["id", "nickname", "email"],
+        include: [
+          {
+            model: Post,
+          },
+          {
+            model: User,
+            as: "Followings",
+          },
+          {
+            model: User,
+            as: "Followers",
+          },
+        ],
+      });
+
+      // 내부적으로 req.setHeader("Cookie", "cxlhy")을 구현
+      return res.status(200).json(fullUserWithoutPassword);
+    });
+  })(req, res, next);
+});
+
+router.post("/logout", (req, res, next) => {
+  req.logout();
+  req.session.destroy();
+  res.send("ok");
+});
 
 router.post("/", async (req, res, next) => {
   try {

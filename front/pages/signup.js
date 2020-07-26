@@ -20,7 +20,7 @@ const Signup = () => {
   const [passwordError, setPasswordError] = useState(false);
   const [term, setTerm] = useState(false);
   const [termError, setTermError] = useState(false);
-  const { signUpLoading, signUpDone, signUpError } = useSelector(
+  const { me, signUpLoading, signUpDone, signUpError } = useSelector(
     (state) => state.user
   );
   const dispatch = useDispatch();
@@ -36,6 +36,12 @@ const Signup = () => {
       alert(signUpError);
     }
   }, [signUpError]);
+
+  useEffect(() => {
+    if (me) {
+      Router.replace("/");
+    }
+  }, [me]);
 
   const onChangeTerm = useCallback((e) => {
     setTerm(e.target.checked);

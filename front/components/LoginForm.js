@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Form, Input, Button } from 'antd';
-import Link from 'next/link';
-import useInput from '../hooks/useInput';
-import { useDispatch, useSelector } from 'react-redux';
-import { loginRequestAction } from '../reducers/user';
+import React, { useCallback, useEffect } from "react";
+import PropTypes from "prop-types";
+import styled from "styled-components";
+import { Form, Input, Button } from "antd";
+import Link from "next/link";
+import useInput from "../hooks/useInput";
+import { useDispatch, useSelector } from "react-redux";
+import { loginRequestAction } from "../reducers/user";
 
 const ButtonWrapper = styled.div`
   margin-top: 10px;
@@ -16,10 +16,16 @@ const StyledForm = styled(Form)`
 `;
 
 const LoginForm = () => {
-  const [email, onChangeEmail] = useInput('');
-  const [password, onChangePassword] = useInput('');
+  const [email, onChangeEmail] = useInput("");
+  const [password, onChangePassword] = useInput("");
   const dispatch = useDispatch();
-  const { logInLoading } = useSelector((state) => state.user);
+  const { logInLoading, logInError } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    if (logInError) {
+      alert(logInError);
+    }
+  }, [logInError]);
 
   const onSubmitForm = useCallback(() => {
     // console.log(id, password);
