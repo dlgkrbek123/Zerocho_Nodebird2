@@ -27,4 +27,47 @@ config.json
   환경변수에 따라 db를 다르게 설정 가능
 
 models로 ㄱㄱ
+테이블 <=> 모델
+
+models를 정의하면 sequelize가
+테이블 만들어준다.
+
+------------------------------------
+
+테이블간의 관계가 존재한다.
+각 모델부터 만들고 관계를 파악
+associate에 정의하자.
+
+사용자 - 게시글 - 댓글 - 해시태그 - 이미지
+
+유저 - 게시글 ( 1대다 )
+  hasMany - belongsTo
+  hasOne - belongsTo ( 1대1 )
+  belongsToMany - belongsToMany
+
+belongsTo
+  테이블 foreign key에 
+  해당하는 컬럼을 만들어준다.
+
+belongsToMany
+  join을 통한 중간 테이블이 생성
+  다대다 관계의 검색을 위해서
+  through를 통해 중간 테이블 이름을 바꿀 수 있어
   
+  hashtagId - postId  
+
+한 테이블 내에서도 다대다 관게가 필요
+
+한 테이블 내에서 다대다 관계 발생
+중간테이블 id가 같음
+key아이디 헷갈리니까 foreignKey로 이름 바꿔줌
+
+through : 중간 테이블 이름
+as : 1대다 관계시 붙여지는 id의 이름을 결정
+foreignKey : 중간 테이블 column 이름
+
+
+
+db 설정 후 
+   npx sequelize db:create
+
