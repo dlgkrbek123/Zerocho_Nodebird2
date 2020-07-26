@@ -47,7 +47,8 @@ app.use(passport.session());
 app.use("/post", postRouter);
 app.use("/user", userRouter);
 
-app.post("/login", (req, res) => {});
+// 기본적으로 에러 핸들링 미들웨어가 있음
+// (err, req,res, next) 로 구현가능
 
 app.listen(3065, () => {
   console.log("서버 실행 중");
