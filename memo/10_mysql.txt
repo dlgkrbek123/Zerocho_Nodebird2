@@ -1,0 +1,30 @@
+관계형db는 액셀과 유사
+
+커뮤니티 서버
+
+워크벤치 
+  터미널로 db쓰기 힘드니까
+  gui로 쓰자
+
+데이터 베이스
+테이블
+
+
+sequelize
+  mysql은 db를 조작하는 언어
+  sql을 직접 쓰지 말고 js로 조작
+  js => sql
+
+mysql2
+  node와 mysql을 연결
+
+------------------------------------
+
+npx sequelize init
+  디렉토리 초기화 해줌
+
+config.json
+  환경변수에 따라 db를 다르게 설정 가능
+
+models로 ㄱㄱ
+  
