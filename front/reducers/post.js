@@ -100,7 +100,7 @@ const post = (state = initialState, action) => {
         break;
       case REMOVE_POST_SUCCESS:
         draft.mainPosts = draft.mainPosts.filter(
-          ({ id }) => id !== action.data
+          ({ id }) => id !== action.data.PostId
         );
         draft.removePostLoading = false;
         draft.removePostDone = true;

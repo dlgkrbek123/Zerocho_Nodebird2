@@ -44,6 +44,21 @@ router.post("/", isLoggedIn, async (req, res, next) => {
   }
 });
 
+router.delete("/:postId", isLoggedIn, async (req, res, next) => {
+  try {
+    await Post.destroy({
+      where: {
+        id: parseInt(req.params.postId),
+        UserId: req.user.id,
+      },
+    });
+    res.status(200).json({ PostId: parseInt(req.params.postId) });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 // req.params
 router.post("/:postId/comment", isLoggedIn, async (req, res, next) => {
   try {
@@ -117,10 +132,6 @@ router.delete("/:postId/like", async (req, res, next) => {
     console.error(error);
     next(error);
   }
-});
-
-router.delete("/", (req, res) => {
-  req.json({ id: 1 });
 });
 
 module.exports = router;
