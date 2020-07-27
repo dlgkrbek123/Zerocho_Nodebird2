@@ -1,6 +1,9 @@
 import { all, fork, delay, put, takeLatest, call } from "redux-saga/effects";
 import axios from "axios";
 import {
+  LOAD_USER_REQUEST,
+  LOAD_USER_SUCCESS,
+  LOAD_USER_FAILURE,
   LOG_IN_REQUEST,
   LOG_IN_SUCCESS,
   LOG_IN_FAILURE,
@@ -17,6 +20,25 @@ import {
   UNFOLLOW_FAILURE,
   FOLLOW_FAILURE,
 } from "../reducers/user";
+
+function loadUserAPI() {
+  return axios.get("/user");
+}
+
+function* loadUser() {
+  try {
+    const result = yield call(loadUserAPI);
+    yield put({
+      type: LOAD_USER_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    yield put({
+      type: LOAD_USER_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
 
 function logInAPI(data) {
   return axios.post("/user/login", data);
@@ -107,6 +129,10 @@ function* unfollow(action) {
   }
 }
 
+function* watchLoadUser() {
+  yield takeLatest(LOAD_USER_REQUEST, loadUser);
+}
+
 function* watchLogin() {
   yield takeLatest(LOG_IN_REQUEST, logIn);
   // 로그인 액션이 오면 함수를 실행
@@ -130,6 +156,7 @@ function* watchUnfollow() {
 
 export default function* userSaga() {
   yield all([
+    fork(watchLoadUser),
     fork(watchLogin),
     fork(watchLogOut),
     fork(watchSignUp),

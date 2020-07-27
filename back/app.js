@@ -1,5 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const morgan = require("morgan");
+
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const passport = require("passport");
@@ -8,6 +10,7 @@ const cors = require("cors");
 dotenv.config();
 
 const postRouter = require("./routes/post");
+const postsRouter = require("./routes/posts");
 const userRouter = require("./routes/user");
 const db = require("./models/index");
 const passportConfig = require("./passport");
@@ -23,9 +26,10 @@ db.sequelize
 
 passportConfig();
 
+app.use(morgan("dev"));
 app.use(
   cors({
-    origin: "http://127.0.0.1:3060",
+    origin: "http://localhost:3060",
     credentials: true, // true로 해야 쿠키도 전달이된다.
     // true로 하면 origin을 정확히 입력해야한다.
   })
@@ -47,6 +51,7 @@ app.use(passport.session());
 
 app.use("/post", postRouter);
 app.use("/user", userRouter);
+app.use("/posts", postsRouter);
 
 // 기본적으로 에러 핸들링 미들웨어가 있음
 // (err, req,res, next) 로 구현가능

@@ -5,6 +5,65 @@ const passport = require("passport");
 const { User, Post } = require("../models");
 const { isLoggedIn, isNotLoggedIn } = require("./middleware");
 
+router.get("/", async (req, res, next) => {
+  try {
+    if (req.user) {
+      const user = await User.findOne({
+        where: { id: req.user.id },
+        attributes: ["id", "nickname", "email"],
+        include: [
+          {
+            model: Post,
+            attributes: ["id"],
+          },
+          {
+            model: User,
+            as: "Followings",
+            attributes: ["id"],
+          },
+          {
+            model: User,
+            as: "Followers",
+            attributes: ["id"],
+          },
+        ],
+      });
+      res.status(200).json(user);
+    } else {
+      res.status(200).json(null);
+    }
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+});
+
+router.post("/", isNotLoggedIn, async (req, res, next) => {
+  try {
+    const { email, nickname, password } = req.body;
+
+    const exUser = await User.findOne({
+      where: { email },
+    });
+    if (exUser) {
+      res.status(403).send("이미 사용중인 아이디입니다.");
+      return;
+    }
+
+    // 두번쨰 인자가 클 수록 보안이 높아짐
+    const hashedPassword = await bcrypt.hash(password, 12);
+    await User.create({
+      email,
+      nickname,
+      password: hashedPassword,
+    });
+    res.status(200).send("ok");
+  } catch (err) {
+    console.error(err);
+    next(error);
+  }
+});
+
 router.post("/login", isNotLoggedIn, (req, res, next) => {
   // 미들웨어 확장
   passport.authenticate("local", (err, user, info) => {
@@ -51,32 +110,6 @@ router.post("/logout", isLoggedIn, (req, res, next) => {
   req.logout();
   req.session.destroy();
   res.send("ok");
-});
-
-router.post("/", isNotLoggedIn, async (req, res, next) => {
-  try {
-    const { email, nickname, password } = req.body;
-
-    const exUser = await User.findOne({
-      where: { email },
-    });
-    if (exUser) {
-      res.status(403).send("이미 사용중인 아이디입니다.");
-      return;
-    }
-
-    // 두번쨰 인자가 클 수록 보안이 높아짐
-    const hashedPassword = await bcrypt.hash(password, 12);
-    await User.create({
-      email,
-      nickname,
-      password: hashedPassword,
-    });
-    res.status(200).send("ok");
-  } catch (err) {
-    console.error(err);
-    next(error);
-  }
 });
 
 module.exports = router;

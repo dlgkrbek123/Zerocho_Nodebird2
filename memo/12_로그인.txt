@@ -43,3 +43,8 @@ cors가 access-control-allow-origin 해결해준 것처럼
 
 백엔드는 credentails : true
 프론트에서는 ajax요청시 withCredentials
+
+-------------------------------------
+
+세션은 서버의 메모리에 존재
+nodemon에 의해 서버가 재시작되면 날아감

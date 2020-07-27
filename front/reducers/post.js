@@ -1,7 +1,4 @@
-import shortId from "shortid";
 import produce from "immer";
-import shortid from "shortid";
-import faker from "faker";
 
 // faker
 // placeholder.com도 좋다.
@@ -22,33 +19,6 @@ const initialState = {
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
-};
-
-export const generateDummyPost = (number) => {
-  return Array(number)
-    .fill()
-    .map(() => ({
-      id: shortid.generate(),
-      User: {
-        id: shortid.generate(),
-        nickname: faker.name.findName(),
-      },
-      content: faker.lorem.paragraph(),
-      Images: [
-        {
-          src: faker.image.image(),
-        },
-      ],
-      Comments: [
-        {
-          User: {
-            id: shortid.generate(),
-            nickname: faker.name.findName(),
-          },
-          content: faker.lorem.sentence(),
-        },
-      ],
-    }));
 };
 
 export const LOAD_POSTS_REQUEST = "LOAD_POSTS_REQUEST";
@@ -75,15 +45,6 @@ export const addPost = (data) => ({
 export const addComment = (data) => ({
   type: ADD_COMMENT_REQUEST,
   data,
-});
-
-const dummyComment = (data) => ({
-  id: shortId.generate(),
-  content: data.content,
-  User: {
-    id: 1,
-    nickname: "제로초",
-  },
 });
 
 const post = (state = initialState, action) => {
