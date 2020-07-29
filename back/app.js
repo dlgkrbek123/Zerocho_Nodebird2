@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const dotenv = require("dotenv");
 const morgan = require("morgan");
 
@@ -27,6 +28,7 @@ db.sequelize
 passportConfig();
 
 app.use(morgan("dev"));
+app.use("/", express.static(path.join(__dirname, "uploads")));
 app.use(
   cors({
     origin: "http://localhost:3060",
@@ -34,9 +36,14 @@ app.use(
     // true로 하면 origin을 정확히 입력해야한다.
   })
 );
-app.use(express.json()); // json
-app.use(express.urlencoded({ extended: true })); // form
 // req.body에 데이터를 넣어줌
+app.use(express.json()); // json
+app.use(express.urlencoded({ extended: true }));
+// form-data (일반 폼)
+
+// multipart/form-data
+// multer를 설치
+// 파일을 업로드 시 사용
 
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(

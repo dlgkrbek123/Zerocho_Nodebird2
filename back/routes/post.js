@@ -1,15 +1,52 @@
 const express = require("express");
-const { Post, Comment, Image, User } = require("../models");
+const fs = require("fs");
+const multer = require("multer");
+const path = require("path");
 const { isLoggedIn } = require("./middleware");
+const { Post, Comment, Image, User } = require("../models");
 
 const router = express.Router();
 
-router.post("/", isLoggedIn, async (req, res, next) => {
+try {
+  fs.accessSync("uploads");
+} catch (err) {
+  fs.mkdirSync("uploads");
+}
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination(req, res, done) {
+      done(null, "uploads");
+    },
+    filename(req, file, done) {
+      const ext = path.extname(file.originalname); // .확장자
+      const basename = path.basename(file.originalname, ext); // 이름
+
+      done(null, `${basename}_${new Date().getTime()}${ext}`);
+    },
+  }),
+  limit: { fileSize: 20 * 1024 * 1024 }, // 20MB
+});
+
+router.post("/", isLoggedIn, upload.none(), async (req, res, next) => {
   try {
     const post = await Post.create({
       content: req.body.content,
       UserId: req.user.id,
     });
+
+    if (req.body.image) {
+      if (Array.isArray(req.body.image)) {
+        const images = await Promise.all(
+          req.body.image.map((image) => Image.create({ src: image }))
+        );
+        await post.addImages(images);
+      } else {
+        const image = await Image.create({ src: req.body.image });
+        await post.addImages(image);
+      }
+    }
+
     const fullPost = await Post.findOne({
       where: { id: post.id },
       include: [
@@ -133,5 +170,36 @@ router.delete("/:postId/like", async (req, res, next) => {
     next(error);
   }
 });
+
+// 이미지, 동영상은 서버에 직접 구현하지 말고
+// 바로 클라우드로 올리자.
+
+router.post("/images", isLoggedIn, upload.array("image"), (req, res, next) => {
+  // multer를 라우터에 장착 가능
+  // 폼마다 타입이 다르다 app에 적용시 전체 적용되므로
+  // 개별 적용
+
+  // 이미지 업로드 후에 실행
+  // 업로드된 경로를 프론트에 전송
+  console.log(req.files);
+  res.json(req.files.map((v) => v.filename));
+});
+// multipart한번에 보내기
+// {
+//  content : "엄준식",
+//  img : binary
+// }
+// 이미지 미리보기는 애매함
+// 백엔드는 간단한데...
+// 업로드 하는 시점에 이미지가
+// 처리되어서 느림
+// ------------------------------------------
+// 먼저 binary만 올려서 파일경로 받음
+// 미리보기, 리사이징
+// 사람들이 컨텐츠 작성
+// 컨텐츠랑 이미지 경로를 올림
+// 이미지만 업로드하고 게시글 안 쓰고 도망칠 수도있음
+// 근데 일단 지우지는 않음
+// 자산으로 치부
 
 module.exports = router;
